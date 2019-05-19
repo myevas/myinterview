@@ -6,6 +6,7 @@ import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.sleep;
 
 public class PlayersPage {
     private By sortByUserName = By.xpath("//a[text()='Username']");
@@ -13,6 +14,7 @@ public class PlayersPage {
 
     public void sortByUserName(){
         $(sortByUserName).click();
+        sleep(2000);
     }
 
     public List<String> getAllNames(){

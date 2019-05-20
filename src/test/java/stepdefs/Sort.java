@@ -1,15 +1,15 @@
 package stepdefs;
 
+import asserts.TestAsserts;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
-import pages.Checks;
 import pages.MainPage;
 import pages.PlayersPage;
 
 public class Sort {
     MainPage mainPage = new MainPage();
     PlayersPage playersPage = new PlayersPage();
-    Checks checks = new Checks();
+    TestAsserts testAsserts = new TestAsserts();
     @Given("^Open players list$")
     public void open_players_list() throws Throwable {
         mainPage.moveMouseToUsers();
@@ -23,6 +23,6 @@ public class Sort {
 
     @And("^Check result$")
     public void check_result() throws Throwable {
-        checks.checkSortResult();
+        testAsserts.checkSortResult();
     }
 }

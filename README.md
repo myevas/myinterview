@@ -1,16 +1,14 @@
-# Запуск тестов
+# Start tests
 
-### Запуск тестов в IDEA
-Для запуска с jvm параметром надо указать в
-Run - Edit Configuration для конктретного запуска
+### Start in IDEA
+You should start in class - TestRunner
 
-в VM options :
--ea -DTAGS=@testtag -Dautotest_target_url=http://testurl/app
+### Start with MAVEN
+mvn clean install
 
-### Запуск тестов через MAVEN
+# Short description
 
-mvn clean install -DTAGS=@smoke -Dautotest_target_url=http://testurl/app
-
-## Параметры запуска
-* -DTAGS - указание тега теста
-* -Dautotest_target_url - тестовый url
+Features - keep feature file
+Pages - keep pages
+StepDegs - keep steps for cucumber
+Asserts - keep assert for test

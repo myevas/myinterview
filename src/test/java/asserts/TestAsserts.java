@@ -1,15 +1,17 @@
-package pages;
+package asserts;
 
 import helpers.DataFileHelper;
+import helpers.GetOSName;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import pages.PlayersPage;
 import java.io.IOException;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.title;
 import static helpers.ParserExpectedResult.parseFile;
 
-public class Checks {
+public class TestAsserts {
     PlayersPage playersPage = new PlayersPage();
     private By tableUsers = By.xpath("//table/thead//a[contains(text(),'Username')]");
 
@@ -23,7 +25,12 @@ public class Checks {
     }
 
     public void checkSortResult() throws IOException {
-        Assert.assertTrue(parseFile(DataFileHelper.read("\\src\\test\\resources\\ExpectedResult.txt")).
-                equals(playersPage.getAllNames()));
+        String path = "";
+        if(!GetOSName.getOsName().startsWith("Windows")){
+            path = "/src/test/resources/ExpectedResult.txt";
+        } else {
+            path = "\\src\\test\\resources\\ExpectedResult.txt";
+        }
+        Assert.assertTrue(parseFile(DataFileHelper.read(path)).equals(playersPage.getAllNames()));
     }
 }

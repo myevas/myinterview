@@ -1,6 +1,7 @@
 import com.codeborne.selenide.*;
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
+import helpers.GetProperties;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -11,7 +12,7 @@ import static com.codeborne.selenide.Selenide.open;
 @CucumberOptions(
         monochrome = true,
         glue = "stepdefs",
-        tags = "@test",
+        tags = "@testApi",
         features = {"src/test/resources/features/"})
 public class TestRunner {
     @BeforeClass

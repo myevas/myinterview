@@ -8,7 +8,7 @@ mvn clean install
 
 # Short description
 
-Features - keep feature file
-Pages - keep pages
-StepDegs - keep steps for cucumber
+Features - keep feature file  
+Pages - keep pages  
+StepDegs - keep steps for cucumber  
 Asserts - keep assert for test

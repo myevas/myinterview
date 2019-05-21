@@ -1,7 +1,7 @@
 package asserts;
 
 import helpers.DataFileHelper;
-import helpers.GetOSName;
+import helpers.GetProperties;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import pages.PlayersPage;
@@ -25,12 +25,8 @@ public class TestAsserts {
     }
 
     public void checkSortResult() throws IOException {
-        String path = "";
-        if(!GetOSName.getOsName().startsWith("Windows")){
-            path = "/src/test/resources/ExpectedResult.txt";
-        } else {
-            path = "\\src\\test\\resources\\ExpectedResult.txt";
-        }
-        Assert.assertTrue(parseFile(DataFileHelper.read(path)).equals(playersPage.getAllNames()));
+
+        String fileName = GetProperties.getInstance().getProperty("expectedTable");
+        Assert.assertTrue(parseFile(DataFileHelper.read(fileName)).equals(playersPage.getAllNames()));
     }
 }

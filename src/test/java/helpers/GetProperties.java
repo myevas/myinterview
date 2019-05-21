@@ -1,38 +1,45 @@
 package helpers;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Set;
 
 public class GetProperties {
-    private Properties prop;
+    private final Properties configProp = new Properties();
 
-
-    public GetProperties() {
-        init();
+    private GetProperties()
+    {
+        //Private constructor to restrict new instances
+        InputStream in = this.getClass().getClassLoader().getResourceAsStream("config.properties");
+        System.out.println("Read all properties from file");
+        try {
+            configProp.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void init() {
-        String path = "";
-        if(!GetOSName.getOsName().startsWith("Windows")){
-           path = "/src/test/resources/config.properties";
-        } else {
-           path = "\\src\\test\\resources\\config.properties";
-        }
-        prop = new Properties();
-        try (InputStream input = new FileInputStream(System.getProperty("user.dir") + path)) {
-
-            // load a properties file
-            prop.load(input);
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
+    //Bill Pugh Solution for singleton pattern
+    private static class LazyHolder
+    {
+        private static final GetProperties INSTANCE = new GetProperties();
     }
 
-    public String getProperty(String key) {
-        return prop.getProperty(key);
+    public static GetProperties getInstance()
+    {
+        return LazyHolder.INSTANCE;
+    }
+
+    public String getProperty(String key){
+        return configProp.getProperty(key);
+    }
+
+    public Set<String> getAllPropertyNames(){
+        return configProp.stringPropertyNames();
+    }
+
+    public boolean containsKey(String key){
+        return configProp.containsKey(key);
     }
 }

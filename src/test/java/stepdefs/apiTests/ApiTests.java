@@ -4,24 +4,21 @@ import com.google.gson.JsonObject;
 import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import helpers.GetProperties;
+import helpers.RandomDataHelper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-
-import javax.xml.bind.DatatypeConverter;
+import org.junit.Assert;
 import java.util.Base64;
-import java.util.Properties;
-
-import static io.restassured.RestAssured.given;
 
 public class ApiTests {
-    GetProperties prop = new GetProperties();
-    String url = prop.getProperty("url");
-    String s = prop.getProperty("username");
-    String headerAuthorization = "Basic " + Base64.getUrlEncoder().withoutPadding().encodeToString(prop.getProperty("username").getBytes());
-    String pathForToken = prop.getProperty("pathForToken");
-    String contentTypeJson = prop.getProperty("Content-Type");
-    String tokenGuest = "front_2d6b0a8391742f5d789d7d915755e09e";
-
+    String url = GetProperties.getInstance().getProperty("url");
+    String s = GetProperties.getInstance().getProperty("username");
+    String headerAuthorization = "Basic " + Base64.getUrlEncoder().withoutPadding().encodeToString(GetProperties.getInstance().getProperty("username").getBytes());
+    String pathForToken = GetProperties.getInstance().getProperty("pathForToken");
+    String contentTypeJson = GetProperties.getInstance().getProperty("Content-Type");
+    String tokenGuest = "";
+    String registrationName = RandomDataHelper.randomString(10);
+    String registrationPassword = RandomDataHelper.randomString(10);
 
     @Given("^Get guest token$")
     public void get_guest_token() throws Throwable {
@@ -29,7 +26,7 @@ public class ApiTests {
         jsonObject.addProperty("grant_type","client_credentials");
         jsonObject.addProperty("scope","guest:default");
         String body = jsonObject.toString();
-        given()
+        Response response = RestAssured.given()
                 .log()
                 .all()
                 .baseUri(url)
@@ -40,15 +37,20 @@ public class ApiTests {
                 .when()
                 .post()
                 .then()
-                .statusCode(200);
-        //TODO In the future, figure out how to get a token
-        //tokenGuest = response.path("access_token").toString();
+                .extract()
+                .response();
+        int statusCode = response.getStatusCode();
+        Assert.assertTrue(statusCode == 200);
+        tokenGuest = response.path("access_token").toString();
     }
 
     @Given("^Registration player and check response$")
     public void registration_player_and_check_response() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        System.out.println(tokenGuest);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("grant_type","client_credentials");
+        jsonObject.addProperty("scope","guest:default");
+        String body = jsonObject.toString();
     }
 
     @Given("^Authorization player$")

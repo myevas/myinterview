@@ -1,0 +1,29 @@
+{
+  "id": 1,
+  "country_id": 1,
+  "timezone_id": null,
+  "username": "johndoe",
+  "email": null,
+  "name": "John",
+  "surname": "Doe",
+  "gender": "male",
+  "phone_number": "+1234567891",
+  "birthdate": "1950-01-01",
+  "bonuses_allowed": true,
+  "is_verified": true
+}
+
+{
+  "id": 465,
+  "country_id": null,
+  "timezone_id": null,
+  "username": "auAPf1hPCO",
+  "email": "hxsMX@example.com",
+  "name": "hxsMX",
+  "surname": "ofeco",
+  "gender": null,
+  "phone_number": null,
+  "birthdate": null,
+  "bonuses_allowed": true,
+  "is_verified": false
+}

@@ -21,7 +21,7 @@ public class DataFileHelper {
         StringBuilder sb = new StringBuilder();
         File file = new File(filePath);
         if(!file.exists()){
-            file.createNewFile();
+            System.out.println("Файл не найден!");
         }
         try {
             BufferedReader in = new BufferedReader(new FileReader( file.getAbsoluteFile()));

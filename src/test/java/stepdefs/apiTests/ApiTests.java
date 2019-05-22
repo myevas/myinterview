@@ -2,12 +2,22 @@ package stepdefs.apiTests;
 
 import com.google.gson.JsonObject;
 import cucumber.api.java.en.When;
+import gherkin.lexer.Da;
+import helpers.DataFileHelper;
 import helpers.GetProperties;
 import helpers.RandomDataHelper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import net.javacrumbs.jsonunit.JsonAssert;
+import org.json.JSONObject;
 import org.junit.Assert;
+
 import java.util.Base64;
+
+import static net.javacrumbs.jsonunit.JsonAssert.assertJsonEquals;
+
+import static net.javacrumbs.jsonunit.core.Option.COMPARING_ONLY_STRUCTURE;
+import static net.javacrumbs.jsonunit.core.Option.IGNORING_VALUES;
 
 public class ApiTests {
     private String tokenGuest = "";
@@ -25,10 +35,7 @@ public class ApiTests {
 
     @When("^Get guest token$")
     public void get_guest_token() throws Throwable {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("grant_type","client_credentials");
-        jsonObject.addProperty("scope","guest:default");
-        String body = jsonObject.toString();
+        String body = DataFileHelper.read(GetProperties.getInstance().getProperty("postGuestAuth"));
         Response response = RestAssured.given()
                 .log()
                 .all()
@@ -49,14 +56,14 @@ public class ApiTests {
 
     @When("^Registration player and check response$")
     public void registration_player_and_check_response() throws Throwable {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("username",registrationLogin);
-        jsonObject.addProperty("password_change",registrationPassword);
-        jsonObject.addProperty("password_repeat",registrationPassword);
-        jsonObject.addProperty("email",registrationName + "@example.com");
-        jsonObject.addProperty("name",registrationName);
-        jsonObject.addProperty("surname", registrationSurname);
-        String body = jsonObject.toString();
+        JSONObject jsonObj = new JSONObject(DataFileHelper.read(GetProperties.getInstance().getProperty("postRegPlayer")));
+        jsonObj.put("username",registrationLogin);
+        jsonObj.put("password_change",registrationPassword);
+        jsonObj.put("password_repeat",registrationPassword);
+        jsonObj.put("email",registrationName + "@example.com");
+        jsonObj.put("name",registrationName);
+        jsonObj.put("surname", registrationSurname);
+        String body = jsonObj.toString();
         Response response = RestAssured.given()
                 .log()
                 .all()
@@ -75,15 +82,20 @@ public class ApiTests {
         int statusCode = response.getStatusCode();
         Assert.assertTrue(statusCode == 201);
         idPlayer = Integer.parseInt(response.path("id").toString());
+        String jsonResponse = response.getBody().asString();
+        System.out.println(jsonResponse);
+        String jsonExpectedResult = DataFileHelper.read(GetProperties.getInstance().getProperty("regExpectedNewPlayer"));
+        JsonAssert.setOptions(COMPARING_ONLY_STRUCTURE);
+        assertJsonEquals(jsonResponse, jsonExpectedResult);
     }
 
     @When("^Authorization player$")
     public void authorization_player() throws Throwable {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("grant_type","password");
-        jsonObject.addProperty("username",registrationLogin);
-        jsonObject.addProperty("password",registrationPassword);
-        String body = jsonObject.toString();
+        JSONObject jsonObj = new JSONObject(DataFileHelper.read(GetProperties.getInstance().getProperty("postRegPlayer")));
+        jsonObj.put("grant_type","password");
+        jsonObj.put("username",registrationLogin);
+        jsonObj.put("password",registrationPassword);
+        String body = jsonObj.toString();
         Response response = RestAssured.given()
                 .log()
                 .all()
@@ -120,6 +132,11 @@ public class ApiTests {
                 .response();
         int statusCode = response.getStatusCode();
         Assert.assertTrue(statusCode == 200);
+        String jsonResponse = response.getBody().asString();
+        System.out.println(jsonResponse);
+        String jsonExpectedResult = DataFileHelper.read(GetProperties.getInstance().getProperty("getExpectedNewPlayer"));
+        JsonAssert.setOptions(COMPARING_ONLY_STRUCTURE);
+        assertJsonEquals(jsonResponse, jsonExpectedResult);
         idPlayer++;
     }
 

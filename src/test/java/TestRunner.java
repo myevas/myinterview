@@ -12,8 +12,9 @@ import static com.codeborne.selenide.Selenide.open;
 @CucumberOptions(
         monochrome = true,
         glue = "stepdefs",
-        tags = "@testApi",
-        features = {"src/test/resources/features/"})
+        tags = "@all",
+        features = {"src/test/resources/features/"}
+        )
 public class TestRunner {
     @BeforeClass
     public static void setUp() {
